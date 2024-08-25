@@ -12,44 +12,73 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final dataset = [
+    {
+      "title1": "Smart",
+      "title2": "Cooking",
+      "title3": "Experience",
+      "image": "assets/onboarding.jpg"
+    },
+    {
+      "title1": "Enjoy",
+      "title2": "With",
+      "title3": "Professional",
+      "image": "assets/home.jpg"
+    },
+    {
+      "title1": "Lovely",
+      "title2": "With",
+      "title3": "Tastely",
+      "image": "assets/onboarding.jpg"
+    },
+  ];
+  PageController pageController = PageController();
+  int currentPage = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Stack(
-            children: [
-              Image.asset("assets/onboarding.jpg",
-              height: double.infinity,
-              width: double.infinity,
-              fit: BoxFit.cover),
-          SafeArea(
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: const Color.fromARGB(34, 0, 0, 0),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Spacer(),
-                    AzizaText(name: "Smart"),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 80.0),
-                      child: AzizaText(name: "Cooking"),
+          PageView.builder(
+            controller: pageController,
+            onPageChanged: (value) => setState(() {
+              currentPage = value;
+            }),
+            itemCount: dataset.length,
+            itemBuilder: (context, index) => Stack(
+              children: [
+                Image.asset(dataset[index]["image"]!,
+                    height: double.infinity,
+                    width: double.infinity,
+                    fit: BoxFit.cover),
+                SafeArea(
+                  child: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: const Color.fromARGB(34, 0, 0, 0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Spacer(),
+                          AzizaText(name: dataset[index]["title1"]!),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 80.0),
+                            child: AzizaText(name: dataset[index]["title2"]!),
+                          ),
+                          AzizaText(name: dataset[index]["title3"]!),
+                          const Spacer(),
+                          const Spacer(),
+                          const Spacer(),
+                        ],
+                      ),
                     ),
-                    AzizaText(name: "Experience"),
-                    const Spacer(),
-                    const Spacer(),
-                    const Spacer(),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-            ],
           ),
           Column(
             children: [
@@ -69,28 +98,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         padding: const EdgeInsets.all(4.0),
                         child: Row(
                           children: [
-                            Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: const Icon(
-                                  CupertinoIcons.arrow_left,
-                                  size: 18,
-                                )),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  pageController.animateToPage(currentPage - 1,
+                                      duration: const Duration(seconds: 1),
+                                      curve: Curves.fastLinearToSlowEaseIn);
+                                });
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: const Icon(
+                                    CupertinoIcons.arrow_left,
+                                    size: 18,
+                                  )),
+                            ),
                             const Spacer(),
-                            Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: const Icon(
-                                  CupertinoIcons.arrow_right,
-                                  color: Colors.white,
-                                  size: 18,
-                                )),
+                            for (int i = 0; i < dataset.length; i++) ...[
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 500),
+                                  height: 10,
+                                  width: i == currentPage ? 32 : 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: Colors.white.withOpacity(
+                                          i == currentPage ? 1 : 0.4)),
+                                ),
+                              ),
+                            ],
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  pageController.animateToPage(currentPage + 1,
+                                      duration: const Duration(seconds: 1),
+                                      curve: Curves.fastLinearToSlowEaseIn);
+                                });
+                              },
+                              child: Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: const Icon(
+                                    CupertinoIcons.arrow_right,
+                                    color: Colors.white,
+                                    size: 18,
+                                  )),
+                            ),
                           ],
                         ),
                       ),
